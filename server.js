@@ -24,16 +24,42 @@ app.use((req, res, next) => {
     next();
 });
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI, {
-    serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 45000,
-})
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => {
+// MongoDB Connection Strategy for Serverless
+let cachedDb = null;
+
+async function connectToDatabase() {
+    if (cachedDb) {
+        return cachedDb;
+    }
+
+    if (!process.env.MONGODB_URI) {
+        throw new Error('MONGODB_URI environment variable is missing');
+    }
+
+    try {
+        const db = await mongoose.connect(process.env.MONGODB_URI, {
+            serverSelectionTimeoutMS: 5000,
+            socketTimeoutMS: 45000,
+        });
+        console.log('Connected to MongoDB');
+        cachedDb = db;
+        return db;
+    } catch (err) {
         console.error('MongoDB connection error:', err);
-        console.log('TIP: If you see "EREFUSED" on an SRV record, it is a DNS issue. Try the "Standard Connection String" (mongodb://...) if possible.');
-    });
+        throw err;
+    }
+}
+
+// Middleware to ensure DB is connected
+app.use(async (req, res, next) => {
+    try {
+        await connectToDatabase();
+        next();
+    } catch (error) {
+        console.error('Database connection failed handling request:', error);
+        res.status(500).json({ error: 'Database connection failed', details: error.message });
+    }
+});
 
 // Attendance Constants
 const OFFICE_LOCATION = { latitude: 13.274497, longitude: 79.121317 };
