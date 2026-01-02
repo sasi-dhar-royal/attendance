@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Vinnar Institution of Fashion Design</title>
+    <link rel="icon" href="tab-icon.jpeg" type="image/jpeg">
     <!-- Use Google Fonts (Inter) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome Icons -->
@@ -100,10 +101,10 @@
                     </div>
 
                     <div class="mgmt-card flex-center flex-column">
-                        <h3><i class="fas fa-qrcode"></i> Office Access QR</h3>
+                        <h3><i class="fas fa-qrcode"></i> Institution Access QR</h3>
                         <canvas id="qrCanvas"></canvas>
                         <div class="qr-code-box">
-                            Code: <b style="color: var(--card-blue);">VINNAR_OFFICE_2026</b>
+                            Code: <b style="color: var(--card-blue);">VINNAR_INSTITUTION_2026</b>
                         </div>
                     </div>
                 </div>
@@ -486,7 +487,7 @@
         function generateOfficeQR() {
             new QRious({
                 element: document.getElementById('qrCanvas'),
-                value: 'VINNAR_OFFICE_2026',
+                value: 'VINNAR_INSTITUTION_2026',
                 size: 160,
                 level: 'H'
             });
