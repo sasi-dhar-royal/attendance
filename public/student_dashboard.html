@@ -199,6 +199,13 @@
                 const todayStr = new Date().toISOString().split('T')[0];
                 const res = await fetch('/api/attendance/today');
                 const data = await res.json();
+
+                if (!Array.isArray(data)) {
+                    console.error("API Error:", data);
+                    document.getElementById('todayActivity').innerHTML = `<div style="text-align: center; color: red;">System Error: ${data.message || 'Unknown error'}</div>`;
+                    return;
+                }
+
                 const myRecord = data.find(r => r.studentId?._id === user.userId);
 
                 const dot = document.getElementById('statusDot');
