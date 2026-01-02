@@ -202,7 +202,11 @@
 
                 if (!Array.isArray(data)) {
                     console.error("API Error:", data);
-                    document.getElementById('todayActivity').innerHTML = `<div style="text-align: center; color: red;">System Error: ${data.message || 'Unknown error'}</div>`;
+                    const errMsg = data.details || data.error || data.message || 'Unknown error';
+                    document.getElementById('todayActivity').innerHTML = `<div style="text-align: center; color: red; padding: 10px; font-size: 0.8em;">
+                        <strong>System Error:</strong><br>${errMsg}<br>
+                        <span style="color: #666;">(Check Vercel Logs / MongoDB IP Whitelist)</span>
+                    </div>`;
                     return;
                 }
 
