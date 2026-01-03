@@ -95,8 +95,8 @@
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div>
-                        <p style="font-size: 0.75rem; color: var(--text-light);">Total Fee</p>
-                        <p style="font-size: 1.1rem; font-weight: 800;" id="totalFeesVal">₹0</p>
+                        <p style="font-size: 0.75rem; color: var(--text-light);">Due Date</p>
+                        <p style="font-size: 1.1rem; font-weight: 800;" id="dueDateVal">-</p>
                     </div>
                     <div>
                         <p style="font-size: 0.75rem; color: var(--text-light);">Paid Amount</p>
@@ -172,10 +172,10 @@
                 if (me) {
                     // Fees Mapping
                     document.getElementById('feeStatusLabel').innerText = me.feeStatus || 'No Dues';
-                    document.getElementById('totalFeesVal').innerText = `₹${me.totalFees || 0}`;
+                    document.getElementById('dueDateVal').innerText = me.dueDate || '-';
                     document.getElementById('paidFeesVal').innerText = `₹${me.paidFees || 0}`;
-                    const bal = (me.totalFees || 0) - (me.paidFees || 0);
-                    document.getElementById('balanceFeesVal').innerText = `₹${bal > 0 ? bal : 0}`;
+                    // Balance calculation removed as Total Fees is removed
+                    document.getElementById('balanceFeesVal').innerText = 'Ref. Office';
 
                     if (me.feeRemarks) {
                         document.getElementById('feeRemarksContainer').style.display = 'block';

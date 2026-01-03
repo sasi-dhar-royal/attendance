@@ -83,7 +83,7 @@
                             <input type="text" id="username" placeholder="Username (Login ID)" required>
                             <input type="password" id="password" placeholder="Passkey" required>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                <input type="number" id="totalFees" placeholder="Total Fees (₹)">
+                                <input type="date" id="dueDate" placeholder="Due Date">
                                 <input type="number" id="paidFees" placeholder="Paid Amount (₹)">
                             </div>
                             <input type="text" id="feeStatus" placeholder="Summary Status (e.g. 500 Due)">
@@ -256,8 +256,8 @@
                 </div>
                 <div class="edit-form-grid">
                     <div class="form-group">
-                        <label>Total Fees (₹)</label>
-                        <input type="number" id="editTotalFees">
+                        <label>Due Date</label>
+                        <input type="date" id="editDueDate">
                     </div>
                     <div class="form-group">
                         <label>Paid Fees (₹)</label>
@@ -358,7 +358,7 @@
                             <td><span class="badge badge-info">${student.assignedShift || 'morning'}</span></td>
                             <td>
                                 <div class="text-bold ${student.feeStatus === 'No Dues' ? 'text-success' : 'text-danger'}">${student.feeStatus || 'No Dues'}</div>
-                                <div class="text-small text-muted">Total: ₹${student.totalFees || 0} | Paid: ₹${student.paidFees || 0}</div>
+                                <div class="text-small text-muted">Due: ${student.dueDate || '-'} | Paid: ₹${student.paidFees || 0}</div>
                                 ${student.feeRemarks ? `<div class="text-small text-muted" style="font-style: italic;">"${student.feeRemarks}"</div>` : ''}
                             </td>
                             <td>
@@ -450,7 +450,7 @@
                 assignedShift: document.getElementById('assignedShift').value,
                 feeStatus: document.getElementById('feeStatus').value || 'No Dues',
                 recordStatus: document.getElementById('recordStatus').value || 'All Clear',
-                totalFees: Number(document.getElementById('totalFees').value) || 0,
+                dueDate: document.getElementById('dueDate').value || '',
                 paidFees: Number(document.getElementById('paidFees').value) || 0,
                 feeRemarks: document.getElementById('feeRemarks').value || '',
                 pendingDocs: document.getElementById('pendingDocs').value || ''
@@ -608,7 +608,7 @@
         async function editStudentStatus(id, name, s) {
             document.getElementById('editStudentId').value = id;
             document.getElementById('editFullName').value = s.fullName || name;
-            document.getElementById('editTotalFees').value = s.totalFees || 0;
+            document.getElementById('editDueDate').value = s.dueDate || '';
             document.getElementById('editPaidFees').value = s.paidFees || 0;
             document.getElementById('editFeeStatus').value = s.feeStatus || 'No Dues';
             document.getElementById('editFeeRemarks').value = s.feeRemarks || '';
@@ -630,7 +630,7 @@
 
             const payload = {
                 fullName: document.getElementById('editFullName').value,
-                totalFees: Number(document.getElementById('editTotalFees').value),
+                dueDate: document.getElementById('editDueDate').value,
                 paidFees: Number(document.getElementById('editPaidFees').value),
                 feeStatus: document.getElementById('editFeeStatus').value,
                 feeRemarks: document.getElementById('editFeeRemarks').value,

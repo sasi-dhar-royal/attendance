@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
     assignedShift: { type: String, enum: ['morning', 'afternoon'], default: 'morning' },
     fullName: { type: String, required: true },
     feeStatus: { type: String, default: 'No Dues' },
-    totalFees: { type: Number, default: 0 },
+    dueDate: { type: String, default: '' }, // e.g. "2023-12-25"
     paidFees: { type: Number, default: 0 },
     feeRemarks: { type: String, default: '' },
     recordStatus: { type: String, default: 'All Clear' },

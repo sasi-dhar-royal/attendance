@@ -116,7 +116,7 @@ app.post('/api/change-password', async (req, res) => {
 
 // Register Student (Admin)
 app.post('/api/students', async (req, res) => {
-    const { fullName, username, password, feeStatus, recordStatus, assignedShift, totalFees, paidFees, feeRemarks, pendingDocs } = req.body;
+    const { fullName, username, password, feeStatus, recordStatus, assignedShift, dueDate, paidFees, feeRemarks, pendingDocs } = req.body;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
@@ -127,7 +127,8 @@ app.post('/api/students', async (req, res) => {
             assignedShift: assignedShift || 'morning',
             feeStatus: feeStatus || 'No Dues',
             recordStatus: recordStatus || 'All Clear',
-            totalFees: totalFees || 0,
+            recordStatus: recordStatus || 'All Clear',
+            dueDate: dueDate || '',
             paidFees: paidFees || 0,
             feeRemarks: feeRemarks || '',
             pendingDocs: pendingDocs || ''
@@ -141,13 +142,13 @@ app.post('/api/students', async (req, res) => {
 
 // Update Student Status (Admin)
 app.patch('/api/students/:id', async (req, res) => {
-    const { feeStatus, recordStatus, fullName, totalFees, paidFees, feeRemarks, pendingDocs, assignedShift, password } = req.body;
+    const { feeStatus, recordStatus, fullName, dueDate, paidFees, feeRemarks, pendingDocs, assignedShift, password } = req.body;
     try {
         const updateData = {};
         if (feeStatus !== undefined) updateData.feeStatus = feeStatus;
         if (recordStatus !== undefined) updateData.recordStatus = recordStatus;
         if (fullName !== undefined) updateData.fullName = fullName;
-        if (totalFees !== undefined) updateData.totalFees = totalFees;
+        if (dueDate !== undefined) updateData.dueDate = dueDate;
         if (paidFees !== undefined) updateData.paidFees = paidFees;
         if (feeRemarks !== undefined) updateData.feeRemarks = feeRemarks;
         if (pendingDocs !== undefined) updateData.pendingDocs = pendingDocs;
