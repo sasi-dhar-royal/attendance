@@ -382,7 +382,8 @@
                             <td><span class="text-small text-muted">${student.batch || '-'}</span></td>
                             <td>
                                 <!-- Fee Status text removed -->
-                                <div class="text-small text-muted">Amnt: ₹${student.dueAmount || 0} | Due: ${student.dueDate || '-'}</div>
+                                <!-- Fee Status text removed -->
+                                <div class="text-small text-muted">Amnt: ₹${student.dueAmount || 0} | Due: ${student.dueDate ? student.dueDate.split('-').reverse().join('-') : '-'}</div>
                                 ${student.feeRemarks ? `<div class="text-small text-muted" style="font-style: italic;">"${student.feeRemarks}"</div>` : ''}
                             </td>
                             <td>
@@ -578,8 +579,9 @@
                 activeDates.forEach(date => {
                     students.forEach(student => {
                         const rec = data.find(r => r.studentId?._id === student._id && r.date === date);
+                        const displayDate = date.split('-').reverse().join('-');
                         const rowData = {
-                            date: date,
+                            date: displayDate,
                             name: student.fullName,
                             username: student.username,
                             batch: student.batch || '-',
@@ -593,7 +595,7 @@
 
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                            <td>${date}</td>
+                            <td>${rowData.date}</td>
                             <td><div style="font-weight: 700;">${student.fullName}</div><div style="font-size: 0.7rem; color: var(--text-light);">${student.username}</div></td>
                             <td><span style="text-transform: capitalize;">${student.batch || '-'}</span></td>
                             <td><span style="text-transform: capitalize;">${student.assignedShift || 'morning'}</span></td>

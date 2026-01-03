@@ -163,7 +163,7 @@
                 const me = await res.json();
                 if (me) {
                     // Fees Mapping
-                    document.getElementById('dueDateVal').innerText = me.dueDate || '-';
+                    document.getElementById('dueDateVal').innerText = me.dueDate ? me.dueDate.split('-').reverse().join('-') : '-';
                     document.getElementById('dueAmountVal').innerText = `₹${me.dueAmount || 0}`;
 
                     if (me.feeRemarks) {
