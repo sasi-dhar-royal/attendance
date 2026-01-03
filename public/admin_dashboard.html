@@ -158,6 +158,12 @@
                 <div class="mgmt-card mb-15">
                     <div class="flex gap-15" style="align-items: flex-end; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 150px;">
+                            <label class="form-group label">Student (Optional)</label>
+                            <select id="reportStudentSelect" style="margin-bottom: 0;">
+                                <option value="">All Students</option>
+                            </select>
+                        </div>
+                        <div style="flex: 1; min-width: 150px;">
                             <label class="form-group label">Start Date</label>
                             <input type="date" id="reportStartDate" style="margin-bottom: 0;">
                         </div>
@@ -388,6 +394,16 @@
                 const students = await sRes.json();
                 document.getElementById('statTotalStudents').innerText = students.length;
 
+                // Populate Report Student Selector
+                const reportSelect = document.getElementById('reportStudentSelect');
+                reportSelect.innerHTML = '<option value="">All Students</option>';
+                students.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s._id;
+                    opt.innerText = `${s.fullName} (${s.username})`;
+                    reportSelect.appendChild(opt);
+                });
+
                 const aRes = await fetch('/api/attendance/today');
                 const data = await aRes.json();
 
@@ -495,6 +511,7 @@
         async function loadReportPreview() {
             const startDate = document.getElementById('reportStartDate').value;
             const endDate = document.getElementById('reportEndDate').value;
+            const studentId = document.getElementById('reportStudentSelect').value;
             const tbody = document.querySelector('#reportPreviewTable tbody');
             const downloadBtn = document.getElementById('downloadCSVBtn');
 
@@ -505,8 +522,14 @@
 
             try {
                 const sRes = await fetch('/api/all-students');
-                const students = await sRes.json();
-                const aRes = await fetch(`/api/attendance/range-report?startDate=${startDate}&endDate=${endDate}`);
+                let students = await sRes.json();
+
+                // If a specific student is selected, filter the student list
+                if (studentId) {
+                    students = students.filter(s => s._id === studentId);
+                }
+
+                const aRes = await fetch(`/api/attendance/range-report?startDate=${startDate}&endDate=${endDate}&studentId=${studentId}`);
                 const data = await aRes.json();
 
                 if (data.length === 0) {

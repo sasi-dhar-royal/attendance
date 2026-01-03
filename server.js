@@ -304,11 +304,17 @@ app.get('/api/attendance/report', async (req, res) => {
 
 // Get Attendance Records by Date Range (Report)
 app.get('/api/attendance/range-report', async (req, res) => {
-    const { startDate, endDate } = req.query; // YYYY-MM-DD
+    const { startDate, endDate, studentId } = req.query; // YYYY-MM-DD
     try {
-        const records = await Attendance.find({
+        const query = {
             date: { $gte: startDate, $lte: endDate }
-        }).populate('studentId', 'fullName username assignedShift').sort({ date: 1, checkInTime: 1 });
+        };
+
+        if (studentId) {
+            query.studentId = studentId;
+        }
+
+        const records = await Attendance.find(query).populate('studentId', 'fullName username assignedShift').sort({ date: 1, checkInTime: 1 });
 
         res.json(records);
     } catch (error) {
