@@ -236,8 +236,10 @@ app.post('/api/mark-attendance', async (req, res) => {
             return res.status(400).json({ message: 'GPS data required.' });
         }
 
-        // 3. Image Upload to External Platform (ImgBB)
-        const imageUrl = await uploadToImgBB(photo);
+        // 3. Image Handling
+        // Optimization: Store optimized Base64 directly in DB for instant verification.
+        // ImgBB upload removed to prevent latency.
+        const imageUrl = photo;
 
         // 4. Time Check (Optional removed per user request)
         // Restricted shifts are now disabled. 
