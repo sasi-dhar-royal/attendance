@@ -65,7 +65,7 @@ app.use(async (req, res, next) => {
 // Attendance Constants
 const OFFICE_LOCATION = { latitude: 13.274497, longitude: 79.121317 };
 const RADIUS_METERS = 100;
-const QR_SECRET = "VINNAR_OFFICE_2026";
+const QR_SECRET = "VINNAR_INSTITUTION_2026";
 
 // Shift Timing Check
 // Shift timing removed - unrestricted attendance
