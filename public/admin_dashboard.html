@@ -91,11 +91,14 @@
                             <input type="text" id="feeRemarks" placeholder="Fee Remarks (e.g. Next pay 10th)">
                             <input type="text" id="recordStatus" placeholder="Record Status (e.g. Pending)">
                             <input type="text" id="pendingDocs" placeholder="Missing Docs (e.g. Aadhar, Photo)">
-                            <select id="assignedShift" required>
-                                <option value="">Assign Shift</option>
-                                <option value="morning">Morning (9am-1pm)</option>
-                                <option value="afternoon">Afternoon (1pm-5pm)</option>
-                            </select>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <input type="text" id="batch" placeholder="Batch (e.g. 2024-25)">
+                                <select id="assignedShift" required>
+                                    <option value="">Assign Shift</option>
+                                    <option value="morning">Morning (9am-1pm)</option>
+                                    <option value="afternoon">Afternoon (1pm-5pm)</option>
+                                </select>
+                            </div>
                             <button type="submit" class="btn btn-primary"
                                 style="width: 100%; justify-content: center;">Register Member</button>
                         </form>
@@ -142,6 +145,7 @@
                                     <th>Full Name</th>
                                     <th>Login ID</th>
                                     <th>Assigned Shift</th>
+                                    <th>Batch</th>
                                     <th>Financials</th>
                                     <th>Record Status</th>
                                     <th>Action</th>
@@ -286,6 +290,10 @@
                         <input type="text" id="editRecordStatus" placeholder="e.g. Pending">
                     </div>
                     <div class="form-group">
+                        <label>Batch</label>
+                        <input type="text" id="editBatch" placeholder="e.g. 2024-25">
+                    </div>
+                    <div class="form-group">
                         <label>Assigned Shift</label>
                         <select id="editAssignedShift">
                             <option value="morning">Morning</option>
@@ -364,6 +372,7 @@
                             <td><div class="text-bold">${student.fullName}</div></td>
                             <td><div class="text-mono text-muted" style="text-transform: uppercase;">${student.username}</div></td>
                             <td><span class="badge badge-info">${student.assignedShift || 'morning'}</span></td>
+                            <td><span class="text-small text-muted">${student.batch || '-'}</span></td>
                             <td>
                                 <!-- Fee Status text removed -->
                                 <div class="text-small text-muted">Amnt: ₹${student.dueAmount || 0} | Due: ${student.dueDate || '-'}</div>
@@ -466,6 +475,7 @@
                 username: document.getElementById('username').value,
                 password: document.getElementById('password').value,
                 assignedShift: document.getElementById('assignedShift').value,
+                batch: document.getElementById('batch').value || '',
                 feeStatus: 'No Dues', // Default as field is removed
                 recordStatus: document.getElementById('recordStatus').value || 'All Clear',
                 dueDate: document.getElementById('dueDate').value || '',
@@ -641,6 +651,7 @@
             document.getElementById('editFeeRemarks').value = s.feeRemarks || '';
             document.getElementById('editRecordStatus').value = s.recordStatus || 'All Clear';
             document.getElementById('editAssignedShift').value = s.assignedShift || 'morning';
+            document.getElementById('editBatch').value = s.batch || '';
             document.getElementById('editPendingDocs').value = s.pendingDocs || '';
             document.getElementById('editPassword').value = ''; // Reset password field
 
@@ -664,6 +675,7 @@
                 feeRemarks: document.getElementById('editFeeRemarks').value,
                 recordStatus: document.getElementById('editRecordStatus').value,
                 assignedShift: document.getElementById('editAssignedShift').value,
+                batch: document.getElementById('editBatch').value,
                 pendingDocs: document.getElementById('editPendingDocs').value
             };
 

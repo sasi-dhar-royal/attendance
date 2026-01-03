@@ -116,7 +116,7 @@ app.post('/api/change-password', async (req, res) => {
 
 // Register Student (Admin)
 app.post('/api/students', async (req, res) => {
-    const { fullName, username, password, feeStatus, recordStatus, assignedShift, dueDate, dueAmount, paidFees, feeRemarks, pendingDocs } = req.body;
+    const { fullName, username, password, feeStatus, recordStatus, assignedShift, batch, dueDate, dueAmount, paidFees, feeRemarks, pendingDocs } = req.body;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
@@ -125,8 +125,8 @@ app.post('/api/students', async (req, res) => {
             password: hashedPassword,
             role: 'student',
             assignedShift: assignedShift || 'morning',
+            batch: batch || '',
             feeStatus: feeStatus || 'No Dues',
-            recordStatus: recordStatus || 'All Clear',
             recordStatus: recordStatus || 'All Clear',
             dueDate: dueDate || '',
             dueAmount: dueAmount || 0,
@@ -143,7 +143,7 @@ app.post('/api/students', async (req, res) => {
 
 // Update Student Status (Admin)
 app.patch('/api/students/:id', async (req, res) => {
-    const { feeStatus, recordStatus, fullName, dueDate, dueAmount, paidFees, feeRemarks, pendingDocs, assignedShift, password } = req.body;
+    const { feeStatus, recordStatus, fullName, dueDate, dueAmount, paidFees, feeRemarks, pendingDocs, assignedShift, batch, password } = req.body;
     try {
         const updateData = {};
         if (feeStatus !== undefined) updateData.feeStatus = feeStatus;
@@ -155,6 +155,7 @@ app.patch('/api/students/:id', async (req, res) => {
         if (feeRemarks !== undefined) updateData.feeRemarks = feeRemarks;
         if (pendingDocs !== undefined) updateData.pendingDocs = pendingDocs;
         if (assignedShift !== undefined) updateData.assignedShift = assignedShift;
+        if (batch !== undefined) updateData.batch = batch;
 
         if (password) {
             updateData.password = await bcrypt.hash(password, 10);

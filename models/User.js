@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: true },
     role: { type: String, enum: ['student', 'admin'], required: true, default: 'student' },
     assignedShift: { type: String, enum: ['morning', 'afternoon'], default: 'morning' },
+    batch: { type: String, default: '' },
     fullName: { type: String, required: true },
     feeStatus: { type: String, default: 'No Dues' },
     dueDate: { type: String, default: '' }, // e.g. "2023-12-25"
