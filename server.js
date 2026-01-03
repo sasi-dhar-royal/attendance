@@ -25,6 +25,10 @@ app.use((req, res, next) => {
     next();
 });
 
+app.get('/api/config', (req, res) => {
+    res.json({ imgbbKey: process.env.IMGBB_API_KEY });
+});
+
 // MongoDB Connection Strategy for Serverless
 let cachedDb = null;
 

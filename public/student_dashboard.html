@@ -311,13 +311,33 @@
         async function markAttendance(type, qrData, photo) {
             const msgEl = document.getElementById('status-msg');
             msgEl.style.display = "block";
-            msgEl.innerText = "Verifying & Submitting...";
 
             try {
+                // 1. Upload to ImgBB (Client-Side)
+                msgEl.innerText = "Uploading Proof...";
+                let imageUrl = photo; // Fallback
+
+                try {
+                    const cfgRes = await fetch('/api/config');
+                    const { imgbbKey } = await cfgRes.json();
+
+                    if (imgbbKey) {
+                        const formData = new FormData();
+                        formData.append("image", photo.replace(/^data:image\/\w+;base64,/, ""));
+                        const upRes = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbKey}`, { method: "POST", body: formData });
+                        const upData = await upRes.json();
+                        if (upData.success) imageUrl = upData.data.url;
+                    }
+                } catch (e) {
+                    console.warn("ImgBB direct upload failed, falling back to server relay", e);
+                }
+
+                // 2. Submit Attendance
+                msgEl.innerText = "Verifying & Submitting...";
                 const res = await fetch('/api/mark-attendance', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: user.userId, type, userLat: currentLat, userLng: currentLng, qrCodeData: qrData, photo })
+                    body: JSON.stringify({ userId: user.userId, type, userLat: currentLat, userLng: currentLng, qrCodeData: qrData, photo: imageUrl })
                 });
                 const data = await res.json();
                 alert(data.message);
