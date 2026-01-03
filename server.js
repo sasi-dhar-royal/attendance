@@ -63,8 +63,8 @@ app.use(async (req, res, next) => {
 });
 
 // Attendance Constants
-const OFFICE_LOCATION = { latitude: 13.274497, longitude: 79.121317 };
-const RADIUS_METERS = 100;
+const OFFICE_LOCATION = { latitude: 13.618500, longitude: 79.410528 };
+const RADIUS_METERS = 150;
 const QR_SECRET = "VINNAR_INSTITUTION_2026";
 
 // Shift Timing Check
