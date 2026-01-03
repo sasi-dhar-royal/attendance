@@ -162,6 +162,12 @@
                 <div class="mgmt-card mb-15">
                     <div class="flex gap-15" style="align-items: flex-end; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 150px;">
+                            <label class="form-group label">Batch (Optional)</label>
+                            <select id="reportBatchSelect" style="margin-bottom: 0;">
+                                <option value="">All Batches</option>
+                            </select>
+                        </div>
+                        <div style="flex: 1; min-width: 150px;">
                             <label class="form-group label">Student (Optional)</label>
                             <select id="reportStudentSelect" style="margin-bottom: 0;">
                                 <option value="">All Students</option>
@@ -404,6 +410,17 @@
                 const students = await sRes.json();
                 document.getElementById('statTotalStudents').innerText = students.length;
 
+                // Populate Report Batch Selector
+                const batchSelect = document.getElementById('reportBatchSelect');
+                const uniqueBatches = [...new Set(students.map(s => s.batch).filter(b => b))];
+                batchSelect.innerHTML = '<option value="">All Batches</option>';
+                uniqueBatches.forEach(b => {
+                    const opt = document.createElement('option');
+                    opt.value = b;
+                    opt.innerText = b;
+                    batchSelect.appendChild(opt);
+                });
+
                 // Populate Report Student Selector
                 const reportSelect = document.getElementById('reportStudentSelect');
                 reportSelect.innerHTML = '<option value="">All Students</option>';
@@ -522,6 +539,7 @@
         async function loadReportPreview() {
             const startDate = document.getElementById('reportStartDate').value;
             const endDate = document.getElementById('reportEndDate').value;
+            const batch = document.getElementById('reportBatchSelect').value;
             const studentId = document.getElementById('reportStudentSelect').value;
             const tbody = document.querySelector('#reportPreviewTable tbody');
             const downloadBtn = document.getElementById('downloadCSVBtn');
@@ -534,6 +552,11 @@
             try {
                 const sRes = await fetch('/api/all-students');
                 let students = await sRes.json();
+
+                // Filter by Batch if selected
+                if (batch) {
+                    students = students.filter(s => s.batch === batch);
+                }
 
                 // If a specific student is selected, filter the student list
                 if (studentId) {
