@@ -213,7 +213,8 @@ app.post('/api/mark-attendance', async (req, res) => {
 
         // 1. QR Verification (Static)
         if (qrCodeData !== QR_SECRET) {
-            return res.status(403).json({ message: 'Invalid QR Code. Please scan the official office code.' });
+            console.log(`QR Mismatch: Received '${qrCodeData}' vs Expected '${QR_SECRET}'`);
+            return res.status(403).json({ message: `Invalid QR Code. Scanned: "${qrCodeData}". Please scan the official "VINNAR_INSTITUTION_2026" code.` });
         }
 
         // 2. Geofencing 
