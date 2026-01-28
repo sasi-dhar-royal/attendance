@@ -826,17 +826,17 @@
 
                 const attRes = await fetch(`/api/attendance/range-report?startDate=${startDate}&endDate=${endDate}&studentId=${result.studentId._id || result.studentId}`);
                 const attendanceRecords = await attRes.json();
-
                 const presentDays = attendanceRecords.filter(a => a.checkInTime).length;
 
-                // Estimate working days (Total Days - Sundays)
-                let totalDaysInMonth = new Date(year, month, 0).getDate();
-                let sundays = 0;
-                for (let d = 1; d <= totalDaysInMonth; d++) {
-                    const date = new Date(year, month - 1, d);
-                    if (date.getDay() === 0) sundays++;
-                }
-                const estimatedWorkingDays = totalDaysInMonth - sundays;
+                // Calculate Working Days based on ANY attendance on a given day (Dynamic)
+                // Fetch ALL attendance for this month (no studentId filter)
+                const allAttRes = await fetch(`/api/attendance/range-report?startDate=${startDate}&endDate=${endDate}`);
+                const allAttendanceRecords = await allAttRes.json();
+
+                // Get unique dates where ANYONE was present
+                const uniqueWorkingDates = new Set(allAttendanceRecords.map(r => r.date.split('T')[0]));
+                const estimatedWorkingDays = uniqueWorkingDates.size;
+
                 const attendancePercent = estimatedWorkingDays > 0 ? ((presentDays / estimatedWorkingDays) * 100).toFixed(1) : 0;
 
                 const monthFormatted = new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -852,6 +852,7 @@
                 msg += `\nTotal Percentage: ${result.totalPercentage.toFixed(1)}%\n`;
 
                 msg += `\nAttendance (Monthly):\n`;
+                msg += `• Working Days: ${estimatedWorkingDays}\n`;
                 msg += `• Days Present: ${presentDays}\n`;
                 msg += `• Approx. Attendance: ${attendancePercent}%\n`;
 
