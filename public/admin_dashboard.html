@@ -893,9 +893,22 @@
                 msg += `• Days Present: ${presentDays}\n`;
                 msg += `• Approx. Attendance: ${attendancePercent}%\n`;
 
-                if (student.dueAmount > 0) {
+                // Calculate Fine based on Attendance %
+                let attendanceFine = 0;
+                const ap = parseFloat(attendancePercent);
+                if (ap < 90 && ap >= 80) attendanceFine = 300;
+                else if (ap < 80 && ap >= 70) attendanceFine = 500;
+                else if (ap < 70 && ap >= 60) attendanceFine = 700;
+                else if (ap < 60) attendanceFine = 1000;
+
+                if (student.dueAmount > 0 || attendanceFine > 0) {
                     msg += `\nFees Details:\n`;
-                    msg += `• Due Amount: ₹${student.dueAmount}\n`;
+                    if (student.dueAmount > 0) {
+                        msg += `• Due Amount: ₹${student.dueAmount}\n`;
+                    }
+                    if (attendanceFine > 0) {
+                        msg += `• Attendance Fine: ₹${attendanceFine}\n`;
+                    }
                     if (student.dueDate) {
                         const dDate = new Date(student.dueDate).toLocaleDateString('en-GB');
                         msg += `• Due Date: ${dDate}\n`;
